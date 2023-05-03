@@ -2,6 +2,7 @@ require("dotenv").config()
 const express = require('express');
 const server = express();
 const port = process.env.PORT_KEY
+const API_KEY = process.env.API_KEY
 const cors = require('cors');
 const Data = require('./Movie-Data/data.json')
 
