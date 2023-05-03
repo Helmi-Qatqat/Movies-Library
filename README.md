@@ -3,10 +3,12 @@
 **Author Name**: Helmi Qatqat
 
 ## WRRC
+
 ![image](./images/WRRC.png)
 
 ## Overview
 
+This Website contains the all the movies from all over the world translated to 4 languages.
 
 ## Getting Started
 <!-- What are the steps that a user must take in order to build this app on their own machine and get it running? -->
@@ -18,4 +20,4 @@
 <!-- What are the features included in you app -->
 1. User Accout.
 2. Ability to make a favorite list of movies.
-3. Watch Movies in different resolutions.
+3. Watch Movies in different resolutions and different subtitle languages.
