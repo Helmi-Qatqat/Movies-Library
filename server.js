@@ -57,10 +57,6 @@ server.get("/people", async (req, res) => {
   res.json(result.data)
 })
 
-// server.get('/crash', (req, res) => {
-//   throw new Error('Server crash');
-// });
-// 
 server.use((err, req, res) => {
   res.status(500).json({
     status: 500,
