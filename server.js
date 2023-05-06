@@ -5,9 +5,12 @@ const port = process.env.PORT_KEY
 const API_KEY = process.env.API_KEY
 const cors = require('cors');
 const Data = require('./Movie-Data/data.json');
-const { default: axios } = require("axios");
+const axios = require("axios");
+const pg = require("pg")
+const client = new pg.Client(process.env.DATABASE_URL)
 
 server.use(cors());
+server.use(express.json())
 
 function Movie(title, poster_path, overview) {
   this.title = title;
@@ -19,16 +22,30 @@ function errorHandler(req, res) {
   res.status(404).send('Page Not Found')
 }
 
+function addMovie(req,res) {
+  const movie = req.body;
+  const sql = `INSERT INTO movies_lists (title, poster_path, overview)
+  VALUES ('${movie.title}','${movie.poster_path}', '${movie.overview}');`
+  client.query(sql).then(() => res.send('added succesfully'))
+}
+
+function getMovies(req,res) {
+  const sql = `SELECT * FROM movies_lists;`
+  client.query(sql).then((data) => res.send(data.rows))
+}
+
+server.post("/add", addMovie)
+server.get("/getMovies", getMovies)
 
 server.get("/", (req,res) => {
   res.status(200).send(new Movie(Data.title, Data.poster_path, Data.overview))
 })
 
-
-
 server.get("/favorite", (req, res) => {
   res.status(200).send('Welcome to Favorite Page')
 })
+
+server.post("/")
 
 server.get("/trending", async (req, res) => {
   const url = `https://api.themoviedb.org/3/trending/all/week?api_key=${API_KEY}&language=en-US`
@@ -66,6 +83,8 @@ server.use((err, req, res) => {
 
 server.get("*", errorHandler)
 
-server.listen(port, () => {
-	console.log(`server is listinging on port ${port}`) // Message to be displayed on terminal
-})
+client.connect().then(
+  server.listen(port, () => {
+    console.log(`server is listinging on port ${port}`) // Message to be displayed on terminal
+  })
+)
