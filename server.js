@@ -33,15 +33,18 @@ server.get("/favorite", (req, res) => {
 server.get("/trending", async (req, res) => {
   const url = `https://api.themoviedb.org/3/trending/all/week?api_key=${API_KEY}&language=en-US`
   const moviesFromApi = await axios.get(url)
-  res.json(moviesFromApi.data)
+  const movie = moviesFromApi.data.results.map(
+    (movie) => new Movie(movie.id, movie.title, movie.release_date, movie.poster_path, movie.overview))
+  res.json(movie)
 })
 
 server.get(`/search`, async (req, res) => {
   let searchByName = req.query.name
-  console.log(searchByName)
   const url = `https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${searchByName}`
   const searchResult = await axios.get(url)
-  res.json(searchResult.data)
+  const movie = searchResult.data.results.map(
+    (movie) => new Movie(movie.id, movie.title, movie.release_date, movie.poster_path, movie.overview))
+  res.json(movie)
 })
 
 server.get("/certification", async (req, res) => {
