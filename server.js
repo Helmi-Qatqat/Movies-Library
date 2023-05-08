@@ -21,12 +21,9 @@ function errorHandler(req, res) {
   res.status(404).send('Page Not Found')
 }
 
-
 server.get("/", (req,res) => {
   res.status(200).send(new Movie(Data.title, Data.poster_path, Data.overview))
 })
-
-
 
 server.get("/favorite", (req, res) => {
   res.status(200).send('Welcome to Favorite Page')
