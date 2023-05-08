@@ -14,17 +14,33 @@ server.use(express.json())
 function Movie(id, title, release_date, poster_path, overview) {
   this.id = id;
   this.title = title;
-  this.release_date = release_date
+  this.release_date = release_date;
   this.poster_path = poster_path;
-  this.overview = overview
+  this.overview = overview;
 }
 
 function errorHandler(req, res) {
   res.status(404).send('Page Not Found')
 }
 
+function addMovie(req,res) {
+  const movie = req.body;
+  const sql = `INSERT INTO movies_lists (title, release_date, poster_path, overview)
+  VALUES ('${movie.title}', '${movie.release_date}', '${movie.poster_path}', '${movie.overview}');`
+  client.query(sql).then(() => res.send('added succesfully'))
+}
+
+function getMovies(req,res) {
+  const sql = `SELECT * FROM movies_lists;`
+  client.query(sql).then((data) => res.send(data.rows))
+}
+
+server.post("/add", addMovie)
+
+server.get("/getMovies", getMovies)
+
 server.get("/", (req,res) => {
-  res.status(200).send(new Movie(Data.title, Data.poster_path, Data.overview))
+  res.status(200).send({title: Data.title, poster_path: Data.poster_path, overview: Data.overview})
 })
 
 server.get("/favorite", (req, res) => {
@@ -34,18 +50,18 @@ server.get("/favorite", (req, res) => {
 server.get("/trending", async (req, res) => {
   const url = `https://api.themoviedb.org/3/trending/all/week?api_key=${API_KEY}&language=en-US`
   const moviesFromApi = await axios.get(url)
-  const movie = moviesFromApi.data.results.map(
+  const movies = moviesFromApi.data.results.map(
     (movie) => new Movie(movie.id, movie.title, movie.release_date, movie.poster_path, movie.overview))
-  res.json(movie)
+  res.json(movies)
 })
 
 server.get(`/search`, async (req, res) => {
   let searchByName = req.query.name
   const url = `https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${searchByName}`
   const searchResult = await axios.get(url)
-  const movie = searchResult.data.results.map(
+  const movies = searchResult.data.results.map(
     (movie) => new Movie(movie.id, movie.title, movie.release_date, movie.poster_path, movie.overview))
-  res.json(movie)
+  res.json(movies)
 })
 
 server.get("/certification", async (req, res) => {
@@ -61,7 +77,12 @@ server.get("/people", async (req, res) => {
   res.json(result.data)
 })
 
+server.get('/crash', (req, res, next) => {
+  throw new Error('Server crash');
+});
+
 server.use((err, req, res) => {
+  console.error(err.stack);
   res.status(500).json({
     status: 500,
     responseText: "Sorry, something went wrong"
@@ -72,6 +93,6 @@ server.get("*", errorHandler)
 
 client.connect().then(
   server.listen(port, () => {
-    console.log(`server is listinging on port ${port}`) // Message to be displayed on terminal
+    console.log(`server is listening on port ${port}`) // Message to be displayed on terminal
   })
 )
