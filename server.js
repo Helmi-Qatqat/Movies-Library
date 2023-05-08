@@ -6,7 +6,8 @@ const API_KEY = process.env.API_KEY
 const cors = require('cors');
 const Data = require('./Movie-Data/data.json');
 const axios = require("axios");
-
+const pg = require("pg")
+const client = new pg.Client(process.env.DATABASE_URL)
 
 server.use(cors());
 server.use(express.json())
