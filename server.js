@@ -18,24 +18,39 @@ function Movie(title, poster_path, overview) {
   this.overview = overview
 }
 
-function errorHandler(req, res) {
+function errorHandler (req, res) {
   res.status(404).send('Page Not Found')
 }
 
-function addMovie(req,res) {
+function addMovie (req, res) {
   const movie = req.body;
   const sql = `INSERT INTO movies_lists (title, poster_path, overview)
   VALUES ('${movie.title}','${movie.poster_path}', '${movie.overview}');`
   client.query(sql).then(() => res.send('added succesfully'))
 }
 
-function getMovies(req,res) {
+function getMovies (req, res) {
   const sql = `SELECT * FROM movies_lists;`
   client.query(sql).then((data) => res.send(data.rows))
 }
 
+function deleteMovie (req, res) {
+  
+}
+
+function updateMovie (req, res) {
+
+}
+
+function getTheMovie (req, res) {
+
+}
+
 server.post("/add", addMovie)
 server.get("/getMovies", getMovies)
+server.get("/getMovie/:id", getTheMovie)
+server.delete("/movie/:id", deleteMovie)
+server.put("/movie/:id", updateMovie)
 
 server.get("/", (req,res) => {
   res.status(200).send(new Movie(Data.title, Data.poster_path, Data.overview))
