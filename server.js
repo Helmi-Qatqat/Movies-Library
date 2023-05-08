@@ -10,6 +10,7 @@ const pg = require("pg")
 const client = new pg.Client(process.env.DATABASE_URL)
 
 server.use(cors());
+server.use(express.json())
 
 function Movie(id, title, release_date, poster_path, overview) {
   this.id = id;
@@ -30,6 +31,8 @@ server.get("/", (req,res) => {
 server.get("/favorite", (req, res) => {
   res.status(200).send('Welcome to Favorite Page')
 })
+
+server.post("/")
 
 server.get("/trending", async (req, res) => {
   const url = `https://api.themoviedb.org/3/trending/all/week?api_key=${API_KEY}&language=en-US`
