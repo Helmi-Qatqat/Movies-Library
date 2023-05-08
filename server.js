@@ -5,7 +5,9 @@ const port = process.env.PORT_KEY
 const API_KEY = process.env.API_KEY
 const cors = require('cors');
 const Data = require('./Movie-Data/data.json');
-const { default: axios } = require("axios");
+const axios = require("axios");
+const pg = require("pg")
+const client = new pg.Client(process.env.DATABASE_URL)
 
 server.use(cors());
 
@@ -49,7 +51,7 @@ server.get(`/search`, async (req, res) => {
 server.get("/certification", async (req, res) => {
   const url = `https://api.themoviedb.org/3/certification/movie/list?api_key=${API_KEY}`
   const result = await axios.get(url)
-  res.json(result.data)
+  res.json(result.data.certifications)
 })
 
 server.get("/people", async (req, res) => {
@@ -68,6 +70,8 @@ server.use((err, req, res) => {
 
 server.get("*", errorHandler)
 
-server.listen(port, () => {
-	console.log(`server is listinging on port ${port}`) // Message to be displayed on terminal
-})
+client.connect().then(
+  server.listen(port, () => {
+    console.log(`server is listinging on port ${port}`) // Message to be displayed on terminal
+  })
+)
