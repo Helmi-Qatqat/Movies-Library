@@ -32,8 +32,6 @@ server.get("/favorite", (req, res) => {
   res.status(200).send('Welcome to Favorite Page')
 })
 
-server.post("/")
-
 server.get("/trending", async (req, res) => {
   const url = `https://api.themoviedb.org/3/trending/all/week?api_key=${API_KEY}&language=en-US`
   const moviesFromApi = await axios.get(url)
