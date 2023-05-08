@@ -9,8 +9,10 @@ const { default: axios } = require("axios");
 
 server.use(cors());
 
-function Movie(title, poster_path, overview) {
+function Movie(id, title, release_date, poster_path, overview) {
+  this.id = id;
   this.title = title;
+  this.release_date = release_date
   this.poster_path = poster_path;
   this.overview = overview
 }
