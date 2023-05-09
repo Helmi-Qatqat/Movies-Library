@@ -4,7 +4,7 @@
 
 ## WRRC
 
-![image](./images/WRRC-Data_Base.png)
+![image](./images/WRRC-UD.png)
 
 ## Overview
 
