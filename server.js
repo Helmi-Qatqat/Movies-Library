@@ -1,16 +1,16 @@
+'use strict';
 require("dotenv").config()
 const express = require('express');
 const server = express();
-const port = process.env.PORT_KEY
-const API_KEY = process.env.API_KEY
 const cors = require('cors');
 const Data = require('./Movie-Data/data.json');
 const axios = require("axios");
 const pg = require("pg")
 const client = new pg.Client(process.env.DATABASE_URL)
-
 server.use(cors());
 server.use(express.json())
+const port = process.env.PORT_KEY
+const API_KEY = process.env.API_KEY
 
 function Movie(id, title, release_date, poster_path, overview) {
   this.id = id;
@@ -31,14 +31,42 @@ function addMovie(req,res) {
   client.query(sql).then(() => res.send('added succesfully'))
 }
 
-function getMovies(req,res) {
+function getAllMovies(req,res) {
   const sql = `SELECT * FROM movies_lists;`
   client.query(sql).then((data) => res.send(data.rows))
 }
 
+
+function getMovie (req, res) {
+  const paramId = req.params.id
+  const sql = `SELECT * FROM movies_lists WHERE id = ${paramId};`
+  client.query(sql).then((data) => res.status(200).send(data))
+}
+
+function deleteMovie (req, res) {
+  const paramId = req.params.id 
+  const sql = `DELETE FROM movies_lists WHERE id = ${paramId};`
+  client.query(sql)
+  .then(() => res.status(204).json(`Data successfully Deleted`))
+}
+
+function updateMovie (req, res) {
+  const paramId = req.params.id
+  const theComment = req.body.comment
+  const sql = `UPDATE movies_lists SET comment = '${theComment}' WHERE id = ${paramId};`
+  client.query(sql).then((data) => res.send(`Updated Successfully`))
+}
+
+
+server.get("/getMovie/:id", getMovie)
+
+server.delete("/movie/:id", deleteMovie)
+
+server.put("/movie/:id", updateMovie)
+
 server.post("/add", addMovie)
 
-server.get("/getMovies", getMovies)
+server.get("/getMovies", getAllMovies)
 
 server.get("/", (req,res) => {
   res.status(200).send({title: Data.title, poster_path: Data.poster_path, overview: Data.overview})
@@ -47,6 +75,7 @@ server.get("/", (req,res) => {
 server.get("/favorite", (req, res) => {
   res.status(200).send('Welcome to Favorite Page')
 })
+
 
 server.get("/trending", async (req, res) => {
   const url = `https://api.themoviedb.org/3/trending/all/week?api_key=${API_KEY}&language=en-US`
