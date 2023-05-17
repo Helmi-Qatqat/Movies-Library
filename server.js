@@ -26,11 +26,12 @@ function errorHandler(req, res) {
   res.status(404).send('Page Not Found')
 }
 
-function addMovie(req,res) {
+async function addMovie(req,res) {
   const movie = req.body;
+  console.log(movie)
   const sql = `INSERT INTO movies_lists (id, title, release_date, poster_path, overview)
   VALUES ('${movie.id}', '${movie.title}', '${movie.release_date}', '${movie.poster_path}', '${movie.overview}');`
-  client.query(sql).then(() => res.send('added succesfully'))
+  await client.query(sql)
 }
 
 function getAllMovies(req,res) {
