@@ -73,7 +73,8 @@ server.get("/", (req,res) => {
 })
 
 server.get("/favorite", (req, res) => {
-  res.status(200).send('Welcome to Favorite Page')
+  const sql = `SELECT * FROM movies_lists`
+  client.query(sql).then(data => console.log(data))
 })
 
 

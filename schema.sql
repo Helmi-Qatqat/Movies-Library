@@ -6,4 +6,4 @@ CREATE TABLE IF NOT EXISTS movies_lists (
   poster_path varchar(255),
   overview varchar(255),
   comment varchar(255)
-)
+);
