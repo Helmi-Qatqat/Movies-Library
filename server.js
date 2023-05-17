@@ -7,10 +7,12 @@ const Data = require('./Movie-Data/data.json');
 const axios = require("axios");
 const pg = require("pg")
 const client = new pg.Client(process.env.DATABASE_URL)
-server.use(cors());
-server.use(express.json())
 const port = process.env.PORT_KEY
 const API_KEY = process.env.API_KEY
+
+server.use(cors());
+server.use(express.json())
+
 
 function Movie(id, title, release_date, poster_path, overview) {
   this.id = id;
@@ -74,7 +76,7 @@ server.get("/", (req,res) => {
 
 server.get("/favorite", (req, res) => {
   const sql = `SELECT * FROM movies_lists`
-  client.query(sql).then(data => console.log(data))
+  client.query(sql).then(data => data.json()).then(data => console.log(data))
 })
 
 
