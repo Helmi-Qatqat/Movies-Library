@@ -28,8 +28,8 @@ function errorHandler(req, res) {
 
 function addMovie(req,res) {
   const movie = req.body;
-  const sql = `INSERT INTO movies_lists (title, release_date, poster_path, overview)
-  VALUES ('${movie.title}', '${movie.release_date}', '${movie.poster_path}', '${movie.overview}');`
+  const sql = `INSERT INTO movies_lists (id, title, release_date, poster_path, overview)
+  VALUES ('${movie.id}', '${movie.title}', '${movie.release_date}', '${movie.poster_path}', '${movie.overview}');`
   client.query(sql).then(() => res.send('added succesfully'))
 }
 
@@ -54,8 +54,8 @@ function deleteMovie (req, res) {
 
 function updateMovie (req, res) {
   const paramId = req.params.id
-  const theComment = req.body.comment
-  const sql = `UPDATE movies_lists SET comment = '${theComment}' WHERE id = ${paramId};`
+  const data = req.body
+  const sql = `UPDATE movies_lists SET UPDATE movies_lists SET title = '${data.title}', release_date = '${data.release_date}', poster_path='${data.poster_path}', overview='${data.overview}'  WHERE id = ${paramId};`
   client.query(sql).then((data) => res.send(`Updated Successfully`))
 }
 
@@ -76,7 +76,7 @@ server.get("/", (req,res) => {
 
 server.get("/favorite", (req, res) => {
   const sql = `SELECT * FROM movies_lists`
-  client.query(sql).then(data => data.json()).then(data => console.log(data))
+  client.query(sql).then(data => res.json(data.rows))
 })
 
 
@@ -115,7 +115,6 @@ server.get('/crash', (req, res, next) => {
 });
 
 server.use((err, req, res) => {
-  console.error(err.stack);
   res.status(500).json({
     status: 500,
     responseText: "Sorry, something went wrong"
