@@ -53,11 +53,11 @@ function deleteMovie (req, res) {
   .then(() => res.status(204).json(`Data successfully Deleted`))
 }
 
-function updateMovie (req, res) {
+async function updateMovie (req, res) {
   const paramId = req.params.id
   const data = req.body
   const sql = `UPDATE movies_lists SET comment = '${data}' WHERE id = ${paramId};`
-  client.query(sql).then((data) => res.send(`Updated Successfully`))
+  await client.query(sql)
 }
 
 server.get("/getMovie/:id", getMovie)
