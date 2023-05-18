@@ -55,7 +55,7 @@ function deleteMovie (req, res) {
 
 async function updateMovie (req, res) {
   const paramId = req.params.id
-  const data = req.body
+  const data = req.body.comment
   const sql = `UPDATE movies_lists SET comment = '${data}' WHERE id = ${paramId};`
   await client.query(sql)
 }
