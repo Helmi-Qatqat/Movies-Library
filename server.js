@@ -56,7 +56,7 @@ function deleteMovie (req, res) {
 function updateMovie (req, res) {
   const paramId = req.params.id
   const data = req.body
-  const sql = `UPDATE movies_lists SET UPDATE movies_lists SET comment = '${data}' WHERE id = ${paramId};`
+  const sql = `UPDATE movies_lists SET comment = '${data}' WHERE id = ${paramId};`
   client.query(sql).then((data) => res.send(`Updated Successfully`))
 }
 
